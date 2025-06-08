@@ -37,6 +37,15 @@
         </div>
 
         <div class="mb-3">
+            <label for="tipo_usuario" class="form-label">Tipo de Usuario</label>
+            <select name="tipo_usuario" id="tipo_usuario" class="form-control" required>
+                <option value="">Seleccione un tipo</option>
+                <option value="1" {{ old('tipo_usuario') == '1' ? 'selected' : '' }}>Cliente</option>
+                <option value="2" {{ old('tipo_usuario') == '2' ? 'selected' : '' }}>Administrador</option>
+            </select>
+        </div>
+
+        <div class="mb-3">
             <label for="password" class="form-label">Contraseña</label>
             <input type="password" name="password" id="password" class="form-control" required>
         </div>

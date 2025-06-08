@@ -4,7 +4,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\ProductController;
 use App\Http\Controllers\CartController;
 use App\Http\Controllers\AuthController;
-
+use App\Http\Controllers\PrestamoController;
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -24,8 +24,9 @@ Route::post('/register', [AuthController::class, 'register'])->name('register');
 Route::middleware('auth')->group(function () {
     Route::get('/', function () {
         return view('welcome');
-    });
-
+    })->name('welcome');
+    Route::get('/actualizar-datos', [AuthController::class, 'edit'])->name('actualizar.edit');
+    Route::patch('/actualizar-datos', [AuthController::class, 'update'])->name('actualizar.update');
 
     Route::get('/products/comprar', [ProductController::class, 'comprar'])->name('products.comprar');
 
@@ -38,7 +39,20 @@ Route::middleware('auth')->group(function () {
     Route::post('/cart/clear', [CartController::class, 'clear'])->name('cart.clear');
     Route::post('/cart/checkout', [CartController::class, 'checkout'])->name('cart.checkout');
 
+    Route::get('/prestamo', [PrestamoController::class, 'index'])->name('prestamo.index'); // Lista
+    Route::get('/prestamo/create', [PrestamoController::class, 'create'])->name('prestamo.create'); // Formulario
+    Route::post('/prestamo', [PrestamoController::class, 'store'])->name('prestamo.store'); // Guardar
 
+    // routes/web.php
+    Route::post('/prestamo/simular', [PrestamoController::class, 'simular'])->name('prestamo.simular');
+
+    Route::get('/prestamo/simular',[PrestamoController::class, 'index'])->name('prestamo.index');
+
+
+     Route::get('/prestamo/evaluacíon',[PrestamoController::class, 'tramitar'])->name('prestamo.tramitar');
+
+     Route::patch('/prestamo/{id}/aprobar', [PrestamoController::class, 'aprobar'])->name('prestamo.aprobar');
+    Route::patch('/prestamo/{id}/rechazar', [PrestamoController::class, 'rechazar'])->name('prestamo.rechazar');
 
 
 });

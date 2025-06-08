@@ -51,10 +51,15 @@
             <input type="number" step="0.01" name="price" id="price" class="form-control" value="{{ old('price') }}" required />
         </div>
 
-        <div class="mb-3">
-            <label for="currency" class="form-label">Tipo de moneda (ej: USD)</label>
-            <input type="text" name="currency" id="currency" class="form-control" value="{{ old('currency') }}" maxlength="3" required />
-        </div>
+      <div class="mb-3">
+        <label for="currency" class="form-label">Tipo de moneda</label>
+        <select name="currency" id="currency" class="form-select" required>
+            <option value="">Seleccione una moneda</option>
+            <option value="SOL" {{ old('currency') == 'SOL' ? 'selected' : '' }}>SOL</option>
+            <option value="USD" {{ old('currency') == 'USD' ? 'selected' : '' }}>USD</option>
+            <option value="EUR" {{ old('currency') == 'EUR' ? 'selected' : '' }}>EUR</option>
+        </select>
+    </div>
 
         <div class="mb-3">
             <label for="stock" class="form-label">Stock</label>

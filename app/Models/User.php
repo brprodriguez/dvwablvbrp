@@ -21,6 +21,9 @@ class User extends Authenticatable
         'name',
         'email',
         'password',
+        'tipo_usuario',
+        'tipo_usuario',
+        'dinero_digital'
     ];
 
     /**
@@ -41,4 +44,9 @@ class User extends Authenticatable
     protected $casts = [
         'email_verified_at' => 'datetime',
     ];
+
+    public function prestamos()
+    {
+        return $this->hasMany(Prestamo::class);
+    }
 }
