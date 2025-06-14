@@ -61,7 +61,8 @@
                     @if(Auth::user()->tipo_usuario == 1)
                         <a href="{{ route('products.comprar') }}" class="btn btn-success btn-lg">Comprar Productos</a>
                         <a href="{{ route('cart.show') }}" class="btn btn-success btn-lg">Ver Carrito</a>
-                         <a href="{{ route('prestamo.index') }}" class="btn btn-success btn-lg">Pedir Prestamo</a>
+                         <a href="{{ route('prestamo.index') }}" class="btn btn-success btn-lg">Pedir Préstamo Manual</a>
+                              <a href="{{ route('prestamo.indexautomatico') }}" class="btn btn-success btn-lg">Pedir Préstamo Automático</a>
                      @endif
                      @if(Auth::user()->tipo_usuario == 2)
                           <a href="{{ route('prestamo.tramitar') }}" class="btn btn-success btn-lg">Evaluar Préstamo</a>

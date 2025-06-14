@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\Prestamo;
+use App\Models\Prestamoautomatico;
 
 class PrestamoController extends Controller
 {
@@ -11,6 +12,12 @@ class PrestamoController extends Controller
     {
         $prestamos = Prestamo::all()->where('user_id', auth()->id());
         return view('prestamo.index', compact('prestamos'));
+    }
+
+     public function indexautomatico()
+    {
+        $prestamos = Prestamoautomatico::all()->where('user_id', auth()->id());
+        return view('prestamo.indexautomatico', compact('prestamos'));
     }
 
     public function tramitar(){
@@ -22,6 +29,14 @@ class PrestamoController extends Controller
     {
         return view('prestamo.create');
     }
+     public function automaticocreate()
+    {
+        
+        return view('prestamo.automaticocreate');
+    }
+
+
+
     public function calcularTasa($perfilRiesgo)
     {
         $tasa = 0;
@@ -44,6 +59,33 @@ class PrestamoController extends Controller
 
         return $tasa/100;
     }
+
+    
+
+    public function automaticostore(Request $request)
+    {
+
+        $request->validate([
+            'monto' => 'required|numeric',
+            'plazo' => 'required|integer|min:1',
+            'fecha_inicio' => 'required|date',
+            'perfil_riesgo' => 'required|string', // Puedes ajustar si usas un enum o valores fijos
+            'termsycond' =>  'required',
+        ]);
+
+        Prestamoautomatico::create([
+            'monto' => $request->monto,
+            'plazo' => $request->plazo,
+            'fecha_inicio' => $request->fecha_inicio,
+            'perfil_riesgo' => $request->perfil_riesgo,
+            'estado' => 'Solicitado',
+            // 'user_id' => auth()->id(), // si usas autenticación
+            'user_id' => auth()->id(),
+        ]);
+
+        return redirect()->route('prestamo.indexautomatico')->with('success', 'Préstamo solicitado con éxito.');
+    }
+
     public function store(Request $request)
     {
 
@@ -130,6 +172,70 @@ class PrestamoController extends Controller
     return view('prestamo.simulacion', compact('monto', 'plazo', 'cuotaMensual', 'cronograma', 'tasaAnual'));
     }
 
+
+    public function simularautomatico(Request $request)
+    {
+        $request->validate([
+            'monto' => 'required|numeric',
+            'plazo' => 'required|integer',
+            'fecha_inicio' => 'required|date',
+            'perfil_riesgo' => 'required', // Ej: XX por fecto -> tasa 15%
+            'termsycond' =>  'required',
+        ]);
+
+
+    $monto = $request->monto;
+    $plazo = $request->plazo;
+    $tasaAnual = $this->calcularTasa($request->perfil_riesgo);
+    $fechaInicio = \Carbon\Carbon::parse($request->fecha_inicio);
+    $termsycond = $request->termsycond;
+    // Convertir tasa anual a mensual
+    $tasaMensual = $tasaAnual / 12;
+
+    // Calcular cuota mensual con interés
+    $cuotaMensual = round(
+        ($monto * $tasaMensual) / (1 - pow(1 + $tasaMensual, -$plazo)),
+        2
+    );
+
+    $saldoPendiente = $monto;
+
+    $cronograma = [];
+
+    for ($i = 1; $i <= $plazo; $i++) { 
+    $interes = round($saldoPendiente * $tasaMensual, 2);
+    
+    // Ajuste en la última cuota
+    if ($i == $plazo) {
+        $amortizacion = round($saldoPendiente, 2);
+        $cuota = round($interes + $amortizacion, 2);
+        $saldoRestante = 0.00;
+    } else {
+        $amortizacion = round($cuotaMensual - $interes, 2);
+        $cuota = $cuotaMensual;
+        $saldoRestante = round($saldoPendiente - $amortizacion, 2);
+    }
+
+    $fechaPago = $fechaInicio->copy()->addMonths($i)->format('Y-m-d');
+
+    $cronograma[] = [
+        'nro_cuota' => $i,
+        'fecha_pago' => $fechaPago,
+        'monto' => $cuota,
+        'interes' => $interes,
+        'amortizacion' => $amortizacion,
+        'saldo_restante' => $saldoRestante,
+    ];
+
+    $saldoPendiente -= $amortizacion;
+    }
+
+
+
+    return view('prestamo.simulacionautomatico', compact('monto', 'plazo', 'cuotaMensual', 'cronograma', 'tasaAnual'));
+    }
+
+    
 
     public function aprobar($id)
     {

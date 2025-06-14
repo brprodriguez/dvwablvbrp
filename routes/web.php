@@ -44,15 +44,20 @@ Route::middleware('auth')->group(function () {
     Route::post('/prestamo', [PrestamoController::class, 'store'])->name('prestamo.store'); // Guardar
 
     // routes/web.php
-    Route::post('/prestamo/simular', [PrestamoController::class, 'simular'])->name('prestamo.simular');
+    Route::get('/prestamo/evaluacíon',[PrestamoController::class, 'tramitar'])->name('prestamo.tramitar');
+    Route::patch('/prestamo/{id}/aprobar', [PrestamoController::class, 'aprobar'])->name('prestamo.aprobar');
+    Route::patch('/prestamo/{id}/rechazar', [PrestamoController::class, 'rechazar'])->name('prestamo.rechazar');
 
+    Route::post('/prestamo/simular', [PrestamoController::class, 'simular'])->name('prestamo.simular');
     Route::get('/prestamo/simular',[PrestamoController::class, 'index'])->name('prestamo.index');
 
 
-     Route::get('/prestamo/evaluacíon',[PrestamoController::class, 'tramitar'])->name('prestamo.tramitar');
 
-     Route::patch('/prestamo/{id}/aprobar', [PrestamoController::class, 'aprobar'])->name('prestamo.aprobar');
-    Route::patch('/prestamo/{id}/rechazar', [PrestamoController::class, 'rechazar'])->name('prestamo.rechazar');
+    Route::get('/prestamo/simular-automatico',[PrestamoController::class, 'indexautomatico'])->name('prestamo.indexautomatico');
+    Route::get('/prestamo/automatico-create', [PrestamoController::class, 'automaticocreate'])->name('prestamoautomatico.create'); 
+    Route::post('/prestamo/simular-automatico', [PrestamoController::class, 'simularautomatico'])->name('prestamo.simularAutomatico');
+    
+    Route::post('/prestamo-automatico', [PrestamoController::class, 'automaticostore'])->name('prestamoautomatico.store'); // Guardar
 
 
 });
