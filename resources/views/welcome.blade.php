@@ -66,6 +66,7 @@
                      @endif
                      @if(Auth::user()->tipo_usuario == 2)
                           <a href="{{ route('prestamo.tramitar') }}" class="btn btn-success btn-lg">Evaluar Préstamo</a>
+                          <a href="{{ route('recarga.form') }}" class="btn btn-success btn-lg">Recargar Saldo</a>
                      @endif
                     </div>
                 </div>

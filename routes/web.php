@@ -60,4 +60,17 @@ Route::middleware('auth')->group(function () {
     Route::post('/prestamo-automatico', [PrestamoController::class, 'automaticostore'])->name('prestamoautomatico.store'); // Guardar
 
 
+    // Mostrar el formulario
+    Route::get('/recarga', [App\Http\Controllers\RecargaController::class, 'show'])->name('recarga.form');
+
+    // Ruta para autocompletar usuarios
+    Route::get('/usuarios/buscar', [App\Http\Controllers\RecargaController::class, 'buscarUsuarios'])->name('usuarios.buscar');
+
+    // Procesar la recarga
+    Route::post('/recarga', [App\Http\Controllers\RecargaController::class, 'procesar'])->name('recarga.procesar');
+
+
+
+
+
 });
