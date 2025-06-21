@@ -21,6 +21,7 @@ return new class extends Migration
             $table->string('password');
             $table->integer('tipo_usuario')->default(1);
             $table->integer('dinero_digital')->default(0);
+            $table->integer('dinero_credito')->default(0);
             $table->rememberToken();
             $table->timestamps();
 

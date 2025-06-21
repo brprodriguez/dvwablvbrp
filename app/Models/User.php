@@ -23,7 +23,8 @@ class User extends Authenticatable
         'password',
         'tipo_usuario',
         'tipo_usuario',
-        'dinero_digital'
+        'dinero_digital',
+        'dinero_credito'
     ];
 
     /**

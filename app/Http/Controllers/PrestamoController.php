@@ -245,7 +245,7 @@ class PrestamoController extends Controller
 
          // Sumar el monto al dinero_digital del usuario
         $user = $prestamo->user;
-        $user->dinero_digital += $prestamo->monto;
+        $user->dinero_credito += $prestamo->monto;
         
         $user->save();
 

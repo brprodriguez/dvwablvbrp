@@ -34,7 +34,7 @@ class AprobarPrestamosAutomaticamente extends Command
 
                      // Sumar el monto al dinero_digital del usuario
                     $user = $prestamo->user;
-                    $user->dinero_digital += $prestamo->monto;
+                    $user->dinero_credito += $prestamo->monto;
                     
                     $user->save();
                     $this->info("Estado cambiado a: Aprobado");
