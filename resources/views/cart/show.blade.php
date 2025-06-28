@@ -30,6 +30,8 @@
         <div class="alert alert-info">Tu carrito está vacío.</div>
     @else
          <!-- Botón Limpiar carrito -->
+        <div class="amount"><strong>Débito: S/. {{ number_format(Auth::user()->dinero_digital, 2) }}</strong></div>
+        <div class="amount"><strong>Préstamo: S/. {{ number_format(Auth::user()->dinero_credito, 2) }}</strong></div>
         <div class="d-flex justify-content-end mb-3">
             <form action="{{ route('cart.clear') }}" method="POST">
                 @csrf

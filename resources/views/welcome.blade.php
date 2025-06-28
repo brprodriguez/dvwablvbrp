@@ -99,8 +99,8 @@
                     <!-- Tarjeta de Débito -->
                     <div class="debit-card">
                         <div class="chip"></div>
-                        <div class="title">Tarjeta de Débito</div>
-                        <div class="amount">S/. {{ number_format(Auth::user()->dinero_digital, 2) }}</div>
+                        <div class="title">Recarga débito</div>
+                        <div class="amount">Total: S/. {{ number_format(Auth::user()->dinero_digital, 2) }}</div>
                         <div class="card-footer-info">
                             <div>**** **** **** ****</div>
                             <div>{{ Auth::user()->name }}</div>
@@ -111,8 +111,8 @@
                     <!-- Tarjeta de Crédito -->
                     <div class="credit-card">
                         <div class="chip"></div>
-                        <div class="title">Tarjeta de Crédito</div>
-                        <div class="amount">S/. {{ number_format(Auth::user()->dinero_credito, 2) }}</div>
+                        <div class="title">Préstanos </div>
+                        <div class="amount">Total: S/. {{ number_format(Auth::user()->dinero_credito, 2) }}</div>
                         <div class="card-footer-info">
                             <div>**** **** **** ****</div>
                             <div>{{ Auth::user()->name }}</div>
@@ -144,7 +144,7 @@
                     <div class="d-flex flex-column gap-3">
                         @if(Auth::user()->tipo_usuario == 2)
                         <a href="{{ route('products.index') }}" class="btn btn-secondary btn-lg w-100 d-flex justify-content-between align-items-center">
-                            Ver Productos <i class="bi bi-box-seam"></i>
+                            Mantenimiento Productos <i class="bi bi-box-seam"></i>
                         </a>
                         @endif
                         <a href="{{ route('actualizar.edit') }}" class="btn btn-secondary btn-lg w-100 d-flex justify-content-between align-items-center">
@@ -163,7 +163,7 @@
                             <a href="{{ route('products.comprar') }}" class="btn btn-success btn-lg w-100 d-flex justify-content-between align-items-center">
                                 Comprar Productos <i class="bi bi-cart-check"></i>
                             </a>
-                            <a href="{{ route('cart.show') }}" class="btn btn-success btn-lg w-100 d-flex justify-content-between align-items-center">
+                            <a href="{{ route('cart.index') }}" class="btn btn-success btn-lg w-100 d-flex justify-content-between align-items-center">
                                 Ver Carrito <i class="bi bi-basket"></i>
                             </a>
                             <a href="{{ route('prestamo.index') }}" class="btn btn-success btn-lg w-100 d-flex justify-content-between align-items-center">
@@ -175,7 +175,7 @@
                         @endif
                         @if(Auth::user()->tipo_usuario == 2)
                             <a href="{{ route('prestamo.tramitar') }}" class="btn btn-success btn-lg w-100 d-flex justify-content-between align-items-center">
-                                Evaluar Préstamo <i class="bi bi-clipboard-check"></i>
+                                Evaluar Préstamo (Solo Manuales) <i class="bi bi-clipboard-check"></i>
                             </a>
                             <a href="{{ route('recarga.form') }}" class="btn btn-success btn-lg w-100 d-flex justify-content-between align-items-center">
                                 Recargar Saldo <i class="bi bi-wallet2"></i>

@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Models\Product;
 use App\Services\ExchangeRateService;
+use Illuminate\Support\Facades\Auth;
 
 class CartController extends Controller
 {
@@ -62,7 +63,7 @@ class CartController extends Controller
         return redirect()->route('cart.show')->with('success', 'Carrito limpiado correctamente.');
     }
 
-    public function checkout(Request $request)
+   /* public function checkout(Request $request)
 {
     $request->validate([
         'name' => 'required|string|max:255',
@@ -78,6 +79,48 @@ class CartController extends Controller
     session()->forget('cart'); // Limpiar carrito tras "compra"
 
     return redirect()->route('products.index')->with('success', 'Compra realizada exitosamente. Gracias por tu compra, ' . $request->name . '!');
+}*/
+
+
+public function checkout(Request $request)
+{
+    $cart = session('cart', []);
+    $rates = session('rates', []);
+
+    if (empty($cart)) {
+        return redirect()->route('cart.index')->with('error', 'El carrito está vacío.');
+    }
+
+    $totalSol = 0;
+
+    foreach ($cart as $item) {
+        $rate = $rates[$item['currency']] ?? 1;
+        $subtotal = $item['price'] * $item['quantity'];
+        $subtotalSol = $subtotal * $rate;
+        $totalSol += $subtotalSol;
+    }
+
+    $user = Auth::user();
+
+    if ($user->dinero_digital >= $totalSol) {
+        $user->dinero_digital -= $totalSol;
+    } elseif ($user->dinero_digital + $user->dinero_credito >= $totalSol) {
+        // Usa primero el dinero digital
+        $restante = $totalSol - $user->dinero_digital;
+        $user->dinero_digital = 0;
+        $user->dinero_credito -= $restante;
+    } else {
+        return redirect()->route('cart.show')->with('success', 'Compra realizada con éxito.');
+    }
+
+    $user->save(); // Guarda los cambios en la base de datos
+
+    // Aquí puedes registrar la compra, si usas una tabla de órdenes/pedidos
+    // Por ahora solo limpiamos el carrito
+    session()->forget('cart');
+
+    return redirect()->route('cart.index')->with('success', 'Compra realizada con éxito.');
 }
+
 
 }

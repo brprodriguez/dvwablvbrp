@@ -38,6 +38,8 @@ Route::middleware('auth')->group(function () {
     Route::post('/cart/add', [CartController::class, 'add'])->name('cart.add');
     Route::post('/cart/clear', [CartController::class, 'clear'])->name('cart.clear');
     Route::post('/cart/checkout', [CartController::class, 'checkout'])->name('cart.checkout');
+    Route::get('/cart', [CartController::class, 'show'])->name('cart.index'); // <- ESTA es la que te falta
+
 
     Route::get('/prestamo', [PrestamoController::class, 'index'])->name('prestamo.index'); // Lista
     Route::get('/prestamo/create', [PrestamoController::class, 'create'])->name('prestamo.create'); // Formulario

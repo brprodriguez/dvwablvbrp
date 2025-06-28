@@ -20,7 +20,7 @@
     <h1>Comprar Productos</h1>
 
     <div class="d-flex justify-content-end mb-3">
-        <a href="{{ route('cart.show') }}" class="btn btn-warning">
+        <a href="{{ route('cart.index') }}" class="btn btn-warning">
             Ver carrito 🛒
         </a>
     </div>
@@ -31,10 +31,11 @@
             <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Cerrar"></button>
         </div>
     @endif
-
+        
     @if($products->isEmpty())
         <div class="alert alert-info">No hay productos registrados.</div>
-    @else   
+    @else
+        <div class="alert alert-info">Ingrese la cantidad de productos y luego agréguelo a su carrito.</div>   
         <table class="table table-bordered table-striped">
             <thead class="table-light">
                 <tr>

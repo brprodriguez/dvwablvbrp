@@ -23,12 +23,13 @@
     <a href="{{ route('products.create') }}" class="btn btn-success">Agregar Nuevo Producto</a>
  
 </div>
-    @if(session('success'))
+   @if(session('success'))
     <div class="alert alert-success alert-dismissible fade show" role="alert">
         {{ session('success') }}
         <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Cerrar"></button>
     </div>
     @endif
+
     @if($products->isEmpty())
         <div class="alert alert-info">No hay productos registrados.</div>
     @else   
@@ -66,5 +67,6 @@
     <a href="{{ url('/') }}" class="btn btn-secondary">← Volver al inicio</a>
 </div>
 </body>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 
 </html>
