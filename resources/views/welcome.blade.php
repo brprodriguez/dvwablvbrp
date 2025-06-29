@@ -172,6 +172,10 @@
                             <a href="{{ route('prestamo.indexautomatico') }}" class="btn btn-success btn-lg w-100 d-flex justify-content-between align-items-center">
                                 Préstamo Automático <i class="bi bi-robot"></i>
                             </a>
+                            <a href="#" class="btn btn-success btn-lg w-100 d-flex justify-content-between align-items-center">
+                                Ver compras <i class="bi bi-robot"></i>
+                            </a>
+
                         @endif
                         @if(Auth::user()->tipo_usuario == 2)
                             <a href="{{ route('prestamo.tramitar') }}" class="btn btn-success btn-lg w-100 d-flex justify-content-between align-items-center">

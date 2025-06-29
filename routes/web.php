@@ -35,6 +35,8 @@ Route::middleware('auth')->group(function () {
     Route::post('/products', [ProductController::class, 'store'])->name('products.store');
 
     Route::get('/cart', [CartController::class, 'show'])->name('cart.show');
+    Route::get('/cart', [CartController::class, 'show'])->name('cart.index'); // agregado
+
     Route::post('/cart/add', [CartController::class, 'add'])->name('cart.add');
     Route::post('/cart/clear', [CartController::class, 'clear'])->name('cart.clear');
     Route::post('/cart/checkout', [CartController::class, 'checkout'])->name('cart.checkout');

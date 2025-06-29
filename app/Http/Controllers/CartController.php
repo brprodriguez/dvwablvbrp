@@ -6,7 +6,9 @@ use Illuminate\Http\Request;
 use App\Models\Product;
 use App\Services\ExchangeRateService;
 use Illuminate\Support\Facades\Auth;
-
+use Illuminate\Support\Facades\DB;
+use App\Models\Order;
+use App\Models\OrderItem;
 class CartController extends Controller
 {
     protected $exchangeService;
@@ -85,41 +87,75 @@ class CartController extends Controller
 public function checkout(Request $request)
 {
     $cart = session('cart', []);
-    $rates = session('rates', []);
+    $rates = $this->exchangeService->getRates(); //
 
+  
     if (empty($cart)) {
         return redirect()->route('cart.index')->with('error', 'El carrito está vacío.');
     }
 
     $totalSol = 0;
-
+    $itemsProcesados = [];
+    
     foreach ($cart as $item) {
-        $rate = $rates[$item['currency']] ?? 1;
+        $rate = $rates[$item['currency']] ?? 1;    
+        
         $subtotal = $item['price'] * $item['quantity'];
         $subtotalSol = $subtotal * $rate;
         $totalSol += $subtotalSol;
+
+        $itemsProcesados[] = [
+            'product_name' => $item['name'],
+            'quantity' => $item['quantity'],
+            'price' => $item['price'],
+            'currency' => $item['currency'],
+            'subtotal_sol' => $subtotalSol,
+        ];
     }
 
     $user = Auth::user();
+   DB::beginTransaction();
 
+    try {
     if ($user->dinero_digital >= $totalSol) {
         $user->dinero_digital -= $totalSol;
+            $paymentMethod = 'digital';
+
     } elseif ($user->dinero_digital + $user->dinero_credito >= $totalSol) {
         // Usa primero el dinero digital
         $restante = $totalSol - $user->dinero_digital;
         $user->dinero_digital = 0;
         $user->dinero_credito -= $restante;
+            $paymentMethod = 'mixto';
+
     } else {
-        return redirect()->route('cart.show')->with('success', 'Compra realizada con éxito.');
+    return redirect()->route('cart.show')->with('error', 'Fondos insuficientes para completar la compra.');
     }
 
     $user->save(); // Guarda los cambios en la base de datos
 
     // Aquí puedes registrar la compra, si usas una tabla de órdenes/pedidos
     // Por ahora solo limpiamos el carrito
-    session()->forget('cart');
+            // Registrar la orden
+        $order = new \App\Models\Order();
+        $order->user_id = $user->id;
+        $order->total = $totalSol ;
+        $order->payment_method = $paymentMethod;
+        $order->save();
+        // Registrar los ítems
+        foreach ($itemsProcesados as $item) {
+            $order->items()->create($item);
+        }
+      DB::commit();
+        session()->forget('cart');
 
-    return redirect()->route('cart.index')->with('success', 'Compra realizada con éxito.');
+        return redirect()->route('cart.index')->with('success', 'Compra realizada y registrada con éxito.');
+    } catch (\Exception $e) {
+        dd($e);
+        DB::rollBack();
+
+        return redirect()->route('cart.index')->with('error', 'Ocurrió un error al procesar la compra.');
+    }
 }
 
 

@@ -50,4 +50,8 @@ class User extends Authenticatable
     {
         return $this->hasMany(Prestamo::class);
     }
+    public function orders()
+{
+    return $this->hasMany(Order::class);
+}
 }
